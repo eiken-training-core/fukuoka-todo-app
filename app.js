@@ -12,7 +12,21 @@ class TodoApp {
 
     init() {
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        this.taskList.addEventListener('change', (e) => this.handleCheckboxChange(e));
+        this.taskList.addEventListener('click', (e) => this.handleDeleteClick(e));
         this.render();
+    }
+
+    handleCheckboxChange(e) {
+        if (e.target.classList.contains('task-checkbox')) {
+            this.toggleTask(parseInt(e.target.dataset.id));
+        }
+    }
+
+    handleDeleteClick(e) {
+        if (e.target.classList.contains('btn-delete')) {
+            this.deleteTask(parseInt(e.target.dataset.id));
+        }
     }
 
     handleSubmit(e) {
@@ -126,19 +140,6 @@ class TodoApp {
             
             this.taskList.appendChild(li);
         });
-        
-        // イベントリスナーを追加
-        document.querySelectorAll('.task-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', (e) => {
-                this.toggleTask(parseInt(e.target.dataset.id));
-            });
-        });
-        
-        document.querySelectorAll('.btn-delete').forEach(button => {
-            button.addEventListener('click', (e) => {
-                this.deleteTask(parseInt(e.target.dataset.id));
-            });
-        });
     }
 
     escapeHtml(text) {
@@ -152,8 +153,13 @@ class TodoApp {
     }
 
     loadTasks() {
-        const saved = localStorage.getItem('todos');
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const saved = localStorage.getItem('todos');
+            return saved ? JSON.parse(saved) : [];
+        } catch (error) {
+            console.error('Failed to load tasks from localStorage:', error);
+            return [];
+        }
     }
 }
 
