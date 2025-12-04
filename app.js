@@ -116,8 +116,10 @@ class TodoApp {
             li.className = `task-item ${task.completed ? 'completed' : ''}`;
             
             const deadlineStatus = this.getDeadlineStatus(task.deadline);
+            const validStatuses = ['overdue', 'today', 'upcoming'];
+            const safeStatus = validStatuses.includes(deadlineStatus) ? deadlineStatus : '';
             const deadlineHTML = task.deadline 
-                ? `<div class="task-deadline ${deadlineStatus}">
+                ? `<div class="task-deadline ${safeStatus}">
                      期限: ${this.formatDeadline(task.deadline)}
                    </div>`
                 : '';
